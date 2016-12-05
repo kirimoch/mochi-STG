@@ -1,49 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Enemy : MonoBehaviour {
+public class Enemy : StageObjBase {
 
-    public float speed;
-    public float HitPoint;
-    public float BulletSpeed = 500f;
-    public EnemyMoveType enemyType;
-    public bool isHoming;
-    public int EnemyBulletNum;
-    public float fireInterval = 0.5f;
-    public float searching_enemy;
     public GameObject bullet;
+    public float hitPoint;
+    public bool isHoming;
+    public int enemyBulletNum;
+    public float BulletSpeed = 500f;
+    public float fireInterval = 0.5f;
+    public float score = 100f;
 
-    GameManager GM;
-
-    GameObject player;
+    ScoreText scoreText;
+    GameManager gm;
+    GameObject objPlayer;
     GameObject cannon;
 
     bool isCooling;
-    bool hasFound;
-    bool hasItweenMoving;
-    [HideInInspector]public bool isActive;
-    
-    public enum EnemyMoveType
-    {
-        chase,
-        straight,
-        itween
-    }
+
     // Use this for initialization
-    void Start() {
-        GM = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
-        player = GameObject.Find("player");
+    void Start()
+    {
+        gm = GameObject.Find("GameManager").GetComponent<GameManager>();
         cannon = transform.GetChild(0).gameObject;
-        Debug.Log(EnemyBulletNum);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(player == null)
+        if (objPlayer == null)
         {
-            player = GM.playerPre;
+            objPlayer = gm.objPlayer;
         }
+
         if (isActive)
         {
             Move();
@@ -51,63 +40,18 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    void Move()
-    {
-        switch (enemyType)
-        {
-            case EnemyMoveType.chase:
-                //playerの認識(一定距離まで近づいたらif文内を実行)
-                if (player != null && Vector2.Distance(player.transform.position, transform.position) < searching_enemy)
-                {
-                    Vector2 distance = player.transform.position - transform.position;
-                    Vector2 direction = distance / distance.magnitude;
-                    transform.Translate(direction * speed * Time.deltaTime, Space.World);
-                }
-                else
-                {
-                    transform.Translate(Vector3.left * speed * Time.deltaTime, Space.World);
-                }
-                break;
-            case EnemyMoveType.straight:
-                transform.Translate(Vector3.left * speed * Time.deltaTime, Space.World);
-                break;
-            case EnemyMoveType.itween:
-                if (hasItweenMoving) return;
-
-                MyiTweenPath iPath = GetComponent<MyiTweenPath>();
-                if (iPath == null) break;
-
-                //pathを現在位置から相対座標に加工
-                for (int i = 0; i < iPath.nodeCount; i++)
-                {
-                    iPath.nodes[i] = (iPath.nodes[i] - transform.position) + transform.localPosition;
-                }
-                string pathName = iPath.pathName;
-
-                hasItweenMoving = true;
-                iTween.MoveTo(gameObject, iTween.Hash("movetopath", false, 
-                                                      "path", iTweenPath.GetPath(pathName),
-                                                      "time", 3,
-                                                      "easetype", iTween.EaseType.easeOutSine,
-                                                      "islocal", true));
-                break;
-        }
-
-    }
-
-
     void CreatEnemyBullet()
-    {  
+    {
         //発射処理
         if (!isCooling)
         {
-            if (player == null) return;
+            if (objPlayer == null) return;
 
-            for (int i = -EnemyBulletNum / 2; i <= EnemyBulletNum / 2; i++)
+            for (int i = -enemyBulletNum / 2; i <= enemyBulletNum / 2; i++)
             {
-                if (isHoming == true )
+                if (isHoming == true)
                 {
-                    cannon.transform.LookAt(player.transform);//transformをプレイヤーの方向に初期化
+                    cannon.transform.LookAt(objPlayer.transform);//transformをプレイヤーの方向に初期化
                 }
                 else
                 {
@@ -118,13 +62,13 @@ public class Enemy : MonoBehaviour {
                 cannon.transform.Rotate(30 * i, 0, 0); //発射角度　transformを上書き
                 GameObject objBullet = Instantiate(bullet, cannon.transform.position, cannon.transform.rotation) as GameObject; //bulletの生成、enemyのz軸方向に進む
                 objBullet.transform.parent = transform.root;
-                objBullet. GetComponent<Rigidbody>().AddForce(
+                objBullet.GetComponent<Rigidbody>().AddForce(
                     (objBullet.transform.forward) * BulletSpeed); //forwardでz軸に発射
             }
             isCooling = true;
             Invoke("Cooling", fireInterval);//弾間の時間
         }
-   }
+    }
 
     void Cooling()
     {
@@ -136,11 +80,14 @@ public class Enemy : MonoBehaviour {
     {
         if (col.gameObject.tag == "bullet")
         {
-            HitPoint--;
+            hitPoint = hitPoint - Player.power;
         }
-        if (HitPoint == 0)
+        if (hitPoint <= 0)
         {
+            ScoreText.totalScore = score + ScoreText.totalScore;
             Destroy(gameObject);
+
         }
     }
 }
+

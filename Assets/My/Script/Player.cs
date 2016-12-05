@@ -4,15 +4,16 @@ using System.Collections;
 public class Player : MonoBehaviour
 {
 
+    public static float power = 1.0f;
     public GameObject bullet;
     [SerializeField] private float accel = 3.0f;
-    GameManager GM;
+    GameManager gm;
     bool isCooling;
 
     // Use this for initialization
     void Start()
     {
-        GM = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+        gm = GameObject.Find("GameMaster").GetComponent<GameManager>();
     }
 
     // Update is called once per frame

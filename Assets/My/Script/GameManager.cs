@@ -5,6 +5,8 @@ public class GameManager : MonoBehaviour {
 
     public GameObject playerPre;
     public GameObject scroll;
+    public static int score;
+    public static float life = 3;
     GameObject player;
 
     // Use this for initialization
