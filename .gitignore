@@ -1,3 +1,4 @@
+
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -28,3 +29,13 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# Asset
+/Assets/Gizmos/iTweenIcon.*
+/Assets/iTweenEditor
+/Assets/iTweenEditor.meta
+/Assets/Plugins/iTweenEditor
+/Assets/Plugins/iTweenEditor.meta
+/Assets/Plugins/iTween.*
+/Assets/Plugins/iTweenEvent.*
+/Assets/Plugins/iTweenPath.*
