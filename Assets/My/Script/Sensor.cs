@@ -7,13 +7,14 @@ public class Sensor : MonoBehaviour {
 
     enum SensorType
     {
-        EnemyDestroy,
         BulletDestroy,
+        StageObjDestroy,
         FrontSensor
     }
 
 	// Use this for initialization
 	void Start () {
+
 	}
 	
 	// Update is called once per frame
@@ -23,24 +24,25 @@ public class Sensor : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
+        string tag = col.gameObject.tag;
         switch(sensorType)
         {
             case SensorType.BulletDestroy:
-                if (col.gameObject.tag == "bullet" || col.gameObject.tag == "enemybullet")
+                if (tag == "bullet" || tag == "enemybullet")
                 {
                     Destroy(col.gameObject);
                 }
                 break;
-            case SensorType.EnemyDestroy:
-                if (col.gameObject.tag == "enemy")
+            case SensorType.StageObjDestroy:
+                if (tag == "enemy" || tag == "item")
                 {
                     Destroy(col.gameObject);
                 }
                 break;
             case SensorType.FrontSensor:
-                if (col.gameObject.tag == "enemy")
+                if (tag == "enemy" || tag == "item")
                 {
-                    Enemy em = col.GetComponent<Enemy>();
+                    StageObject em = col.GetComponent<StageObject>();
                     col.gameObject.transform.parent = transform.root;
                     if (em != null)
                     {

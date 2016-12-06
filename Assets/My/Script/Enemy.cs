@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Enemy : StageObjBase {
+public class Enemy : StageObject {
 
     public GameObject bullet;
     public float hitPoint;
@@ -30,7 +30,7 @@ public class Enemy : StageObjBase {
     {
         if (objPlayer == null)
         {
-            objPlayer = gm.objPlayer;
+            objPlayer = gm.playerPre;
         }
 
         if (isActive)
@@ -90,4 +90,3 @@ public class Enemy : StageObjBase {
         }
     }
 }
-

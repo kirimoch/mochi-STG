@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class StageObjBase : MonoBehaviour{
+public class StageObject : MonoBehaviour {
 
     public float speed;
     public float iTweenDuration;
@@ -25,7 +25,7 @@ public class StageObjBase : MonoBehaviour{
         switch (moveType)
         {
             case MoveType.straight:
-                transform.Translate(Vector3.left * speed * Time.deltaTime, Space.Self);
+                transform.Translate(Vector3.left * speed * Time.deltaTime, Space.World);
                 break;
             case MoveType.itween:
                 if (hasItweenMoving) return;
@@ -44,9 +44,14 @@ public class StageObjBase : MonoBehaviour{
                                                       "path", MyiTweenPath.GetPath(pathName),
                                                       "time", iTweenDuration,
                                                       "easetype", iTween.EaseType.easeOutSine,
-                                                      "isLocal", true));
+                                                      "isLocal", true,
+                                                      "oncomplete","SecondMove"));
                 break;
         }
+    }
 
+    private void SecondMove()
+    {
+        moveType = MoveType.straight;
     }
 }

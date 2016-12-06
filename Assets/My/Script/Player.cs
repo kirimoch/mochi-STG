@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        gm = GameObject.Find("GameMaster").GetComponent<GameManager>();
+        gm = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
         {
             var lastPos = col.gameObject.transform.localPosition;
             Destroy(col.gameObject);
-            GM.CreatePlayer(lastPos, 1f);
+            gm.CreatePlayer(lastPos, 1f);
         }
     }
 }

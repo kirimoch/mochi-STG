@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Item : StageObjBase
+public class Item : StageObject
 {
 
     public ItemType itemType;
