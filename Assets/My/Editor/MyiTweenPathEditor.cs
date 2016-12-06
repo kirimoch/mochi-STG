@@ -1,12 +1,19 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System.Collections;
+using System.Collections.Generic;
 
 [CustomEditor(typeof(MyiTweenPath))]
 public class MyiTweenPathEditor : Editor
 {
     MyiTweenPath _target;
     public static int count = 0;
+
+    List<Vector3> nodesByPositon = new List<Vector3>();
+
+    void Reset()
+    {
+
+    }
 
     void OnEnable()
     {
@@ -18,6 +25,8 @@ public class MyiTweenPathEditor : Editor
             _target.initialized = true;
             _target.pathName = "My New Path " + ++count;
             _target.initialName = _target.pathName;
+            _target.nodes[0] = _target.transform.position;
+            _target.nodes[1] = _target.transform.position + Vector3.left * 35;
         }
     }
 
@@ -54,7 +63,12 @@ public class MyiTweenPathEditor : Editor
             Vector3 last = _target.nodes[_target.nodes.Count - 1];
             for (int i = 0; i < _target.nodeCount - _target.nodes.Count; i++)
             {
-                _target.nodes.Add(last);
+                _target.nodes.Add(new Vector3(last.x, last.y, last.z));
+            }
+
+            if(_target.isLockedAllNodesPosition)
+            {
+                GetDiffNodesFromObject();
             }
         }
 
@@ -84,6 +98,80 @@ public class MyiTweenPathEditor : Editor
         {
             EditorUtility.SetDirty(_target);
         }
+
+        //nodes value reset button
+        GUILayout.Space(10);
+        if (GUILayout.Button("Nodes reset", GUILayout.Width(100)))
+        {
+            Undo.RecordObject(_target, "Reset nodes");
+            _target.nodes.Clear();
+            _target.nodes.Add(_target.transform.position);
+            _target.nodes.Add(_target.transform.position + Vector3.left * 35);
+            _target.nodeCount = 2;
+
+            if (_target.isLockedAllNodesPosition)
+            {
+                GetDiffNodesFromObject();
+            }
+            EditorUtility.SetDirty(_target);
+        }
+
+        if (EditorGUILayout.ToggleLeft("Lock Begin Node", _target.isLockedBeginNodesPosition))
+        {
+            if (_target.isLockedBeginNodesPosition)
+            {
+                if (!EditorApplication.isPlaying)
+                {
+                    _target.nodes[0] = _target.transform.position;
+                }
+            }
+            else
+            {
+                _target.isLockedBeginNodesPosition = true;
+                EditorUtility.SetDirty(_target);
+            }
+        }
+        else if(_target.isLockedBeginNodesPosition)
+        {
+            _target.isLockedBeginNodesPosition = false;
+        }
+
+        if (EditorGUILayout.ToggleLeft("Lock All Nodes", _target.isLockedAllNodesPosition, GUILayout.MinWidth(100)))
+        {
+            if (_target.isLockedAllNodesPosition)
+            {
+                if (!EditorApplication.isPlaying)
+                {
+                    Debug.Log(_target.nodes.Count + " " + nodesByPositon.Count);
+                    if (_target.nodes.Count != nodesByPositon.Count)
+                    {
+                        GetDiffNodesFromObject();
+                    }
+                    for (int i = 0; i < _target.nodes.Count; i++)
+                    {
+                        _target.nodes[i] = _target.transform.position + nodesByPositon[i];
+                    }
+                }
+            }
+            else
+            {
+                _target.isLockedAllNodesPosition = true;
+                GetDiffNodesFromObject();
+            }
+        }
+        else if (_target.isLockedAllNodesPosition)
+        {
+            _target.isLockedAllNodesPosition = false;
+        }
+    }
+
+    void GetDiffNodesFromObject()
+    {
+        nodesByPositon.Clear();
+        for (int i = 0; i < _target.nodes.Count; i++)
+        {
+            nodesByPositon.Add(_target.nodes[i] - _target.transform.position);
+        }
     }
 
     // The OnSceneGUI() functuon is:
@@ -102,7 +190,7 @@ public class MyiTweenPathEditor : Editor
                 Handles.Label(_target.nodes[_target.nodes.Count - 1], "'" + _target.pathName + "' End");
 
                 //node handle display:
-                for (int i = 0; i < _target.nodes.Count; i++)
+                for (int i = 1; i < _target.nodes.Count; i++)
                 {
                     _target.nodes[i] = Handles.PositionHandle(_target.nodes[i], Quaternion.identity);
                 }
