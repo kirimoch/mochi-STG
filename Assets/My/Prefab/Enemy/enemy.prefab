@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1
-  HitPoint: 0
-  BulletSpeed: 500
-  enemyType: 1
-  isHoming: 0
-  EnemyBulletNum: 3
-  fireInterval: 0.5
-  searching_enemy: 100
-  bullet: {fileID: 118286, guid: 5f967e77c7228da4d90b408da89d4177, type: 2}
-  GM: {fileID: 0}
+  iTweenDuration: 0
+  moveType: 0
   isActive: 0
+  bullet: {fileID: 118286, guid: 5f967e77c7228da4d90b408da89d4177, type: 2}
+  hitPoint: 0
+  isHoming: 0
+  enemyBulletNum: 0
+  BulletSpeed: 500
+  fireInterval: 0.5
+  score: 100
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -108,7 +108,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 2b3f645dc066d6747b688648b3b72712, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
