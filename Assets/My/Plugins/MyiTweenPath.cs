@@ -5,8 +5,8 @@ using System.Collections;
 
 public class MyiTweenPath : iTweenPath {
 
-    [NonSerialized] public bool isLockedBeginNodesPosition;
-    [NonSerialized] public bool isLockedAllNodesPosition;
+    [NonSerialized] public bool isLockedBeginNode;
+    [NonSerialized] public bool isLockedAllNodes;
 
     void OnEnable()
     {
