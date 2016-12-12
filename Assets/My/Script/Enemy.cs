@@ -45,8 +45,7 @@ public class Enemy : StageObject {
         //発射処理
         if (!isCooling)
         {
-            if (objPlayer == null) return;
-
+           if (objPlayer == null) return;
             for (int i = -enemyBulletNum / 2; i <= enemyBulletNum / 2; i++)
             {
                 if (isHoming == true)

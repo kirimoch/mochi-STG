@@ -9,7 +9,7 @@ public class Item : StageObject
     public enum ItemType
     {
         PowerUp,
-        LifeUp
+        LifeUp,
     }
 
     void Start()
