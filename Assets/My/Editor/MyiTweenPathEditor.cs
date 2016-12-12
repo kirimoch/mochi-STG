@@ -10,11 +10,6 @@ public class MyiTweenPathEditor : Editor
 
     List<Vector3> nodesByPositon = new List<Vector3>();
 
-    void Reset()
-    {
-
-    }
-
     void OnEnable()
     {
         _target = (MyiTweenPath)target;
@@ -30,7 +25,7 @@ public class MyiTweenPathEditor : Editor
         }
     }
 
-    // The OnInspectorGUI() functuon is:
+    // The OnInspectorGUI() functuon of original verson is:
     // Copyright(c) 2011 Bob Berkebile(pixelplacment)
     public override void OnInspectorGUI()
     {
@@ -57,16 +52,16 @@ public class MyiTweenPathEditor : Editor
         _target.nodeCount = Mathf.Clamp(EditorGUILayout.IntSlider(_target.nodeCount, 0, 10), 2, 100);
         EditorGUILayout.EndHorizontal();
 
-        //add node?
+        //add node
         if (_target.nodeCount > _target.nodes.Count)
         {
             Vector3 last = _target.nodes[_target.nodes.Count - 1];
             for (int i = 0; i < _target.nodeCount - _target.nodes.Count; i++)
             {
-                _target.nodes.Add(new Vector3(last.x, last.y, last.z));
+                _target.nodes.Add(last);
             }
 
-            if(_target.isLockedAllNodesPosition)
+            if(_target.isLockedAllNodes)
             {
                 GetDiffNodesFromObject();
             }
@@ -99,50 +94,49 @@ public class MyiTweenPathEditor : Editor
             EditorUtility.SetDirty(_target);
         }
 
-        //nodes value reset button
-        GUILayout.Space(10);
-        if (GUILayout.Button("Nodes reset", GUILayout.Width(100)))
+        EditorGUI.indentLevel = 0;
+        //useful editor extentions
+        //reset all nodes
+        if (!EditorApplication.isPlaying)
         {
-            Undo.RecordObject(_target, "Reset nodes");
-            _target.nodes.Clear();
-            _target.nodes.Add(_target.transform.position);
-            _target.nodes.Add(_target.transform.position + Vector3.left * 35);
-            _target.nodeCount = 2;
-
-            if (_target.isLockedAllNodesPosition)
+            if (GUILayout.Button("Nodes reset", GUILayout.Width(100)))
             {
-                GetDiffNodesFromObject();
+                Undo.RecordObject(_target, "Reset nodes");
+                _target.nodes.Clear();
+                _target.nodes.Add(_target.transform.position);
+                _target.nodes.Add(_target.transform.position + Vector3.left * 35);
+                _target.nodeCount = 2;
+
+                if (_target.isLockedAllNodes)
+                {
+                    GetDiffNodesFromObject();
+                }
+                EditorUtility.SetDirty(_target);
             }
-            EditorUtility.SetDirty(_target);
-        }
 
-        if (EditorGUILayout.ToggleLeft("Lock Begin Node", _target.isLockedBeginNodesPosition))
-        {
-            if (_target.isLockedBeginNodesPosition)
+            //lock node
+            if (EditorGUILayout.ToggleLeft("Lock Begin Node", _target.isLockedBeginNode))
             {
-                if (!EditorApplication.isPlaying)
+                if (_target.isLockedBeginNode)
                 {
                     _target.nodes[0] = _target.transform.position;
+                }
+                else
+                {
+                    _target.isLockedBeginNode = true;
+                    EditorUtility.SetDirty(_target);
                 }
             }
             else
             {
-                _target.isLockedBeginNodesPosition = true;
-                EditorUtility.SetDirty(_target);
+                _target.isLockedBeginNode = false;
             }
-        }
-        else if(_target.isLockedBeginNodesPosition)
-        {
-            _target.isLockedBeginNodesPosition = false;
-        }
 
-        if (EditorGUILayout.ToggleLeft("Lock All Nodes", _target.isLockedAllNodesPosition, GUILayout.MinWidth(100)))
-        {
-            if (_target.isLockedAllNodesPosition)
+            //lock all node
+            if (EditorGUILayout.ToggleLeft("Lock All Nodes", _target.isLockedAllNodes))
             {
-                if (!EditorApplication.isPlaying)
+                if (_target.isLockedAllNodes)
                 {
-                    Debug.Log(_target.nodes.Count + " " + nodesByPositon.Count);
                     if (_target.nodes.Count != nodesByPositon.Count)
                     {
                         GetDiffNodesFromObject();
@@ -152,16 +146,16 @@ public class MyiTweenPathEditor : Editor
                         _target.nodes[i] = _target.transform.position + nodesByPositon[i];
                     }
                 }
+                else
+                {
+                    _target.isLockedAllNodes = true;
+                    GetDiffNodesFromObject();
+                }
             }
             else
             {
-                _target.isLockedAllNodesPosition = true;
-                GetDiffNodesFromObject();
+                _target.isLockedAllNodes = false;
             }
-        }
-        else if (_target.isLockedAllNodesPosition)
-        {
-            _target.isLockedAllNodesPosition = false;
         }
     }
 
@@ -174,7 +168,7 @@ public class MyiTweenPathEditor : Editor
         }
     }
 
-    // The OnSceneGUI() functuon is:
+    // The OnSceneGUI() functuon of original verson is:
     // Copyright(c) 2011 Bob Berkebile(pixelplacment)
     void OnSceneGUI()
     {
