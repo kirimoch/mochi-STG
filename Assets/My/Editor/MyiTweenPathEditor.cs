@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System.Collections;
 using System.Collections.Generic;
 
 [CustomEditor(typeof(MyiTweenPath))]
@@ -9,10 +10,20 @@ public class MyiTweenPathEditor : Editor
     public static int count = 0;
 
     List<Vector3> nodesByPositon = new List<Vector3>();
+    int index;
+    MyiTweenPath[] components;
 
     void OnEnable()
     {
         _target = (MyiTweenPath)target;
+        components = ((MonoBehaviour)target).gameObject.GetComponents<MyiTweenPath>();
+        for(int i = 0; i < components.Length; i++)
+        {
+            if(ReferenceEquals(_target, components[i]))
+            {
+                index = i;
+            }
+        }
 
         //lock in a default path name:
         if (!_target.initialized)
@@ -29,6 +40,7 @@ public class MyiTweenPathEditor : Editor
     // Copyright(c) 2011 Bob Berkebile(pixelplacment)
     public override void OnInspectorGUI()
     {
+        EditorGUILayout.LabelField(index.ToString());
         //path name:
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.PrefixLabel("Path Name");
@@ -119,7 +131,14 @@ public class MyiTweenPathEditor : Editor
             {
                 if (_target.isLockedBeginNode)
                 {
-                    _target.nodes[0] = _target.transform.position;
+                    if (index == 0)
+                    {
+                        _target.nodes[0] = _target.transform.position;
+                    }
+                    else
+                    {
+                        _target.nodes[0] = components[index - 1].nodes[components[index - 1].nodeCount - 1];
+                    }
                 }
                 else
                 {
@@ -180,7 +199,10 @@ public class MyiTweenPathEditor : Editor
                 //	Undo.SetSnapshotTarget(_target,"Adjust iTween Path");
 
                 //path begin and end labels:
-                Handles.Label(_target.nodes[0], "'" + _target.pathName + "' Begin");
+                if (index == 0 || !_target.isLockedBeginNode)
+                {
+                    Handles.Label(_target.nodes[0], "'" + _target.pathName + "' Begin");
+                }
                 Handles.Label(_target.nodes[_target.nodes.Count - 1], "'" + _target.pathName + "' End");
 
                 //node handle display:

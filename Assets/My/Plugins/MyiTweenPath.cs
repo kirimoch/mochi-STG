@@ -17,4 +17,9 @@ public class MyiTweenPath : iTweenPath {
             paths[pathName.ToLower()] = this;
         }
     }
+
+    void OnDestroy()
+    {
+        paths.Remove(pathName.ToLower());
+    }
 }
