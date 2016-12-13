@@ -834,6 +834,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPre: {fileID: 1000013493532300, guid: 5df9ddc9cfa47c04eac5c45cffbd8673, type: 2}
   scroll: {fileID: 2089854942}
+  player: {fileID: 1030051741}
 --- !u!4 &734663264
 Transform:
   m_ObjectHideFlags: 0
@@ -1042,8 +1043,9 @@ MonoBehaviour:
   pathColor: {r: 0, g: 1, b: 1, a: 1}
   nodes:
   - {x: 43.1, y: -1.7, z: 0}
-  - {x: 8.099998, y: -5.8, z: 0}
-  nodeCount: 2
+  - {x: 24.206669, y: 3.711811, z: 0}
+  - {x: 18.372746, y: -5.8, z: 0}
+  nodeCount: 3
   initialized: 1
   initialName: My New Path 1
 --- !u!1001 &997635464
@@ -1221,6 +1223,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1030051741 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1000013493532300, guid: 5df9ddc9cfa47c04eac5c45cffbd8673,
+    type: 2}
+  m_PrefabInternal: {fileID: 844671093}
 --- !u!1 &1103924485
 GameObject:
   m_ObjectHideFlags: 0
