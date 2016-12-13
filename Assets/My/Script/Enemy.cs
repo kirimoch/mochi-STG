@@ -30,7 +30,7 @@ public class Enemy : StageObject {
     {
         if (objPlayer == null)
         {
-            objPlayer = gm.playerPre;
+            objPlayer = gm.player;
         }
 
         if (isActive)

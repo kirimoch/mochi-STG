@@ -38,14 +38,13 @@ public class StageObject : MonoBehaviour {
                     iPath.nodes[i] = (iPath.nodes[i] - transform.position) + transform.localPosition;
                 }
                 string pathName = iPath.pathName;
-
                 hasItweenMoving = true;
                 iTween.MoveTo(gameObject, iTween.Hash("movetopath", false,
                                                       "path", MyiTweenPath.GetPath(pathName),
                                                       "time", iTweenDuration,
                                                       "easetype", iTween.EaseType.easeOutSine,
                                                       "isLocal", true,
-                                                      "oncomplete","SecondMove"));
+                                                      "oncomplete", "SecondMove"));
                 break;
         }
     }

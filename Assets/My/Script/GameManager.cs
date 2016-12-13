@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour {
     public GameObject scroll;
     public static int score;
     public static float life = 3;
-    GameObject player;
+    public GameObject player;
 
     // Use this for initialization
     void Start () {
@@ -21,12 +21,16 @@ public class GameManager : MonoBehaviour {
 
     public void CreatePlayer(Vector3 lastPos, float waittime)
     {
-        StartCoroutine(Wait(waittime, () =>
-         {
-             player = Instantiate(playerPre, Vector3.zero, Quaternion.identity) as GameObject;
-             player.transform.parent = scroll.transform;
-             player.transform.localPosition = lastPos;
-         }));
+        life--;
+        if (life>0)
+        {
+            StartCoroutine(Wait(waittime, () =>
+             {
+                 player = Instantiate(playerPre, Vector3.zero, Quaternion.identity) as GameObject;
+                 player.transform.parent = scroll.transform;
+                 player.transform.localPosition = lastPos;
+             }));
+        }
     }
 
     IEnumerator Wait(float time, System.Action act)
