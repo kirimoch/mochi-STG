@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
     public static int score;
     public static float life = 3;
     public GameObject player;
+    private float invincibleTime;
 
     // Use this for initialization
     void Start () {
@@ -28,7 +29,9 @@ public class GameManager : MonoBehaviour {
              {
                  player = Instantiate(playerPre, Vector3.zero, Quaternion.identity) as GameObject;
                  player.transform.parent = scroll.transform;
+                 lastPos.y = 0; 
                  player.transform.localPosition = lastPos;
+                 player.gameObject.layer = LayerMask.NameToLayer("invinciblePlayer");
              }));
         }
     }

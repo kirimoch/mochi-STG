@@ -13,7 +13,9 @@ public class Player : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Invoke("InvincibleStop", 2.0f);
         gm = GameObject.Find("GameManager").GetComponent<GameManager>();
+
     }
 
     // Update is called once per frame
@@ -49,5 +51,9 @@ public class Player : MonoBehaviour
             Destroy(col.gameObject);
             gm.CreatePlayer(lastPos, 1f);
         }
+    }
+    void InvincibleStop()
+    {
+     gameObject.layer = LayerMask.NameToLayer("player");
     }
 }
