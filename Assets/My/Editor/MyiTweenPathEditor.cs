@@ -7,11 +7,11 @@ using System.Collections.Generic;
 public class MyiTweenPathEditor : Editor
 {
     MyiTweenPath _target;
+    MyiTweenPath[] components;
     public static int count = 0;
 
     List<Vector3> nodesByPositon = new List<Vector3>();
     int index;
-    MyiTweenPath[] components;
 
     void OnEnable()
     {
@@ -108,74 +108,74 @@ public class MyiTweenPathEditor : Editor
 
         EditorGUI.indentLevel = 0;
         //useful editor extentions
-        //reset all nodes
-        if (!EditorApplication.isPlaying)
-        {
-            if (GUILayout.Button("Nodes reset", GUILayout.Width(100)))
-            {
-                Undo.RecordObject(_target, "Reset nodes");
-                _target.nodes.Clear();
-                _target.nodes.Add(_target.transform.position);
-                _target.nodes.Add(_target.transform.position + Vector3.left * 35);
-                _target.nodeCount = 2;
 
-                if (_target.isLockedAllNodes)
+        if (EditorApplication.isPlaying) return;
+        //reset all nodes
+        if (GUILayout.Button("Nodes reset", GUILayout.Width(100)))
+        {
+            Undo.RecordObject(_target, "Reset nodes");
+            _target.nodes.Clear();
+            _target.nodes.Add(_target.transform.position);
+            _target.nodes.Add(_target.transform.position + Vector3.left * 35);
+            _target.nodeCount = 2;
+
+            if (_target.isLockedAllNodes)
+            {
+                GetDiffNodesFromObject();
+            }
+            EditorUtility.SetDirty(_target);
+        }
+
+        //lock begin node
+        if (EditorGUILayout.ToggleLeft("Lock Begin Node", _target.isLockedBeginNode))
+        {
+            if (_target.isLockedBeginNode)
+            {
+                if (index == 0)
                 {
-                    GetDiffNodesFromObject();
+                    _target.nodes[0] = _target.transform.position;
                 }
+                else
+                {
+                    _target.nodes[0] = components[index - 1].nodes[components[index - 1].nodeCount - 1];
+                }
+            }
+            else
+            {
+                _target.isLockedBeginNode = true;
                 EditorUtility.SetDirty(_target);
             }
+        }
+        else
+        {
+            _target.isLockedBeginNode = false;
+        }
 
-            //lock node
-            if (EditorGUILayout.ToggleLeft("Lock Begin Node", _target.isLockedBeginNode))
+        //lock all node
+        if (EditorGUILayout.ToggleLeft("Lock All Nodes", _target.isLockedAllNodes))
+        {
+            if (_target.isLockedAllNodes)
             {
-                if (_target.isLockedBeginNode)
+                if (_target.nodes.Count != nodesByPositon.Count)
                 {
-                    if (index == 0)
-                    {
-                        _target.nodes[0] = _target.transform.position;
-                    }
-                    else
-                    {
-                        _target.nodes[0] = components[index - 1].nodes[components[index - 1].nodeCount - 1];
-                    }
-                }
-                else
-                {
-                    _target.isLockedBeginNode = true;
-                    EditorUtility.SetDirty(_target);
-                }
-            }
-            else
-            {
-                _target.isLockedBeginNode = false;
-            }
-
-            //lock all node
-            if (EditorGUILayout.ToggleLeft("Lock All Nodes", _target.isLockedAllNodes))
-            {
-                if (_target.isLockedAllNodes)
-                {
-                    if (_target.nodes.Count != nodesByPositon.Count)
-                    {
-                        GetDiffNodesFromObject();
-                    }
-                    for (int i = 0; i < _target.nodes.Count; i++)
-                    {
-                        _target.nodes[i] = _target.transform.position + nodesByPositon[i];
-                    }
-                }
-                else
-                {
-                    _target.isLockedAllNodes = true;
                     GetDiffNodesFromObject();
                 }
+                for (int i = 0; i < _target.nodes.Count; i++)
+                {
+                    _target.nodes[i] = _target.transform.position + nodesByPositon[i];
+                }
             }
             else
             {
-                _target.isLockedAllNodes = false;
+                _target.isLockedAllNodes = true;
+                GetDiffNodesFromObject();
             }
         }
+        else
+        {
+            _target.isLockedAllNodes = false;
+        }
+        
     }
 
     void GetDiffNodesFromObject()
