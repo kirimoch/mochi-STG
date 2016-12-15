@@ -6,16 +6,20 @@ public class Player : MonoBehaviour
 
     public static float power = 1.0f;
     public GameObject bullet;
+
     [SerializeField] private float accel = 3.0f;
     GameManager gm;
     bool isCooling;
 
+    Renderer renderer;
+
     // Use this for initialization
     void Start()
     {
-        Invoke("InvincibleStop", 2.0f);
         gm = GameObject.Find("GameManager").GetComponent<GameManager>();
+        renderer = GetComponent<MeshRenderer>();
 
+        StartCoroutine(Frash(2.0f));
     }
 
     // Update is called once per frame
@@ -33,6 +37,7 @@ public class Player : MonoBehaviour
             }
         }
     }
+
     void CreateFire()
     {
         Instantiate(bullet, transform.position, Quaternion.identity);
@@ -52,8 +57,24 @@ public class Player : MonoBehaviour
             gm.CreatePlayer(lastPos, 1f);
         }
     }
+
     void InvincibleStop()
     {
-     gameObject.layer = LayerMask.NameToLayer("player");
+        gameObject.layer = LayerMask.NameToLayer("player");
+    }
+
+    IEnumerator Frash(float frashTime)
+    {
+        Invoke("InvincibleStop", 2.5f);
+        bool transparency = true;
+        float startTime = Time.time;
+
+        while(Time.time - startTime < frashTime)
+        {
+            transparency = !transparency;
+            renderer.enabled = transparency;
+            yield return new WaitForSeconds(0.15f) ;
+        }
+        renderer.enabled = true;
     }
 }

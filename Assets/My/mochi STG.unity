@@ -807,6 +807,16 @@ Prefab:
       propertyPath: iTweenDuration
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 23000011341413262, guid: b083bddc1fd57364681219b12a8f891d,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2b3f645dc066d6747b688648b3b72712, type: 2}
+    - target: {fileID: 23000011341413262, guid: b083bddc1fd57364681219b12a8f891d,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b083bddc1fd57364681219b12a8f891d, type: 2}
   m_IsPrefabParent: 0
