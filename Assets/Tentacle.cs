@@ -11,6 +11,7 @@ public class Tentacle : StageObject {
     GameManager gm;
     GameObject objPlayer;
 
+
     // Use this for initialization
     void Start () {
         gm = GameObject.Find("GameManager").GetComponent<GameManager>();
