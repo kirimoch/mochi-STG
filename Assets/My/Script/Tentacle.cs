@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ioint : MonoBehaviour {
+public class Tentacle : MonoBehaviour
+{
 
+    public float hitPoint;
     public float TentacleLength;
     public float distance;
+    public float score = 100f;
+
 
     GameObject objPlayer;
     GameManager gm;
@@ -13,7 +17,8 @@ public class ioint : MonoBehaviour {
     public GameObject[] ioints;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         gm = GameObject.Find("GameManager").GetComponent<GameManager>();
         objPlayer = gm.player;
     }
@@ -34,15 +39,28 @@ public class ioint : MonoBehaviour {
                     ioints[0].transform.Translate(Vector3.forward * 5 * Time.deltaTime);
                 }
             }
-            else if(TentacleLength > 0)
+            else if (TentacleLength > 0)
             {
-                ioints[0].transform.Translate(Vector3.back  * Time.deltaTime);
-            } 
+                ioints[0].transform.Translate(Vector3.back * Time.deltaTime);
+            }
 
             for (int i = 2; i < ioints.Length; i++)
             {
-                ioints[i -1].transform.position = (ioints[i - 2].transform.position + ioints[i].transform.position) / 2; 
+                ioints[i - 1].transform.position = (ioints[i - 2].transform.position + ioints[i].transform.position) / 2;
             }
+        }
+    }
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.tag == "bullet")
+        {
+            hitPoint = hitPoint - Player.power;
+        }
+        if (hitPoint <= 0)
+        {
+            ScoreText.totalScore = score + ScoreText.totalScore;
+            Destroy(gameObject);
+
         }
     }
 }
