@@ -37,13 +37,12 @@ public class Tentacle : MonoBehaviour
                 if (TentacleLength < 10)
                 {
                     ioints[0].transform.Translate(Vector3.forward * 5 * Time.deltaTime);
-                   // Debug.Log(1);
                 }
             }
             else if (TentacleLength > 0)
             {
-                ioints[0].transform.Translate(Vector3.back * 5* Time.deltaTime);
-               // Debug.Log(2);
+                ioints[0].transform.LookAt(ioints[ioints.Length - 1].transform.position);
+                ioints[0].transform.Translate(Vector3.forward * 5 * Time.deltaTime);
             }
 
             for (int i = 2; i < ioints.Length; i++)
