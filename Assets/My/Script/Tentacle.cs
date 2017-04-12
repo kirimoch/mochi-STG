@@ -13,6 +13,7 @@ public class Tentacle : MonoBehaviour{
 
     GameObject objPlayer;
     GameManager gm;
+    bool hasHit;
 
     public GameObject[] ioints;
 
@@ -51,18 +52,27 @@ public class Tentacle : MonoBehaviour{
                 }
             }
     }
+
+    void LateUpdate()
+    {
+        hasHit = false;
+    }
+
     void OnCollisionEnter(Collision col)
     {
-        Debug.Log("nnn");
-        if (col.gameObject.tag == "bullet")
+        if (!hasHit)
         {
-            hitPoint = hitPoint - Player.power;
-        }
-        if (hitPoint <= 0)
-        {
-            ScoreText.totalScore = score + ScoreText.totalScore;
-            Destroy(gameObject);
+            hasHit = true;
+            if (col.gameObject.tag == "bullet")
+            {
+                hitPoint = hitPoint - Player.power;
+            }
+            if (hitPoint <= 0)
+            {
+                ScoreText.totalScore = score + ScoreText.totalScore;
+                Destroy(gameObject);
 
+            }
         }
     }
 }
